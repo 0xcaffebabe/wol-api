@@ -1,15 +1,14 @@
 package wang.ismy.wolapi;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * @Title: Api
@@ -52,6 +51,22 @@ public class Api {
             return "offline";
         }
     }
+
+    /**
+     * send hibernate request to some matchine
+     * @param ip
+     * @return
+     */
+    @RequestMapping("hibernate")
+    public String hibernate(@RequestParam String ip) {
+        return new RestTemplate().getForObject("http://" + ip + ":8080/control/hibernate", String.class);
+    }
+
+    @RequestMapping("shutdown")
+    public String shutdown(@RequestParam String ip) {
+        return new RestTemplate().getForObject("http://" + ip + ":8080/control/shutdown", String.class);
+    }
+
 
     private byte[] getBytesFromString(String macAddr) throws IllegalArgumentException {
         byte[] bytes = new byte[6];
